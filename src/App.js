@@ -54,6 +54,7 @@ function App() {
 
   useEffect(() => {
     socket.on('receiveLocation', (data) => {
+      console.log(data);
       setUserPositions((prevUserPositions) => ({
         ...prevUserPositions,
         [data.id]: { latitude: data.latitude, longitude: data.longitude },

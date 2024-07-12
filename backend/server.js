@@ -1,26 +1,27 @@
 const express = require('express');
-const {Server} = require('socket.io');
+const { Server } = require('socket.io');
 const http = require('http');
 const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: {
-      origin: 'http://localhost:30001',
-      methods:['GET']
-    }
-  })
+  cors: {
+    origin: 'http://localhost:3001',
+    methods: ['GET', 'POST'],
+  },
+});
 
 // Allow requests from localhost:3001 (your React client)
-app.use(cors({ origin: 'http://localhost:3001' ,credentials:true})); // Configure CORS
+app.use(cors({ origin: 'http://localhost:3001', credentials: true })); // Configure CORS
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
   console.log('A user connected');
 
   socket.on('sendLocation', (data) => {
-    io.emit('receiveLocation', { id: socket.id, ...data });
+    console.log("Received location data:", data);
+    io.emit('receiveLocation', { id: socket.id, ...data }); // Broadcast to all clients
   });
 
   socket.on('disconnect', () => {
